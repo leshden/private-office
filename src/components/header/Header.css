@@ -1,0 +1,12 @@
+header {
+  height: 50px;
+  width: 100%;
+  background-color: lightblue;
+  border-bottom: 1px solid Teal;
+  box-shadow: 0px 5px 10px Teal;
+}
+
+.header-title {
+  text-shadow: 1px 1px 2px #fff;
+  margin-left: 10px;
+}
