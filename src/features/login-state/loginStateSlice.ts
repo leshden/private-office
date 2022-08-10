@@ -48,7 +48,11 @@ export const loginStateSlice = createSlice({
   name: 'login',
   initialState,
   reducers: {
-    // fill in primary logic here
+    logout: (state) => {
+      state.access_token = "";
+      state.login = false;
+      state.error = null;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -70,5 +74,7 @@ export const loginStateSlice = createSlice({
   },
 
 });
+
+export const { logout } = loginStateSlice.actions;
 
 export default loginStateSlice.reducer;
