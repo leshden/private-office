@@ -44,6 +44,24 @@ export const loginAsync = createAsyncThunk<AccessToken, User, { rejectValue: Val
     }
 });
 
+export const registerAsync = createAsyncThunk<AccessToken, User, { rejectValue: ValidationErrors }>(
+  'login-state/registerAsync',
+  async (userData, { rejectWithValue }) => {
+    try {
+      const { email, password } = userData
+      const response = await axios.post('http://localhost:5000/api/auth/register', {
+        email, password
+      });
+      return response.data;
+    } catch (err) {
+      let error: AxiosError<ValidationErrors> = err as AxiosError<ValidationErrors>
+      if (!error.response) {
+        throw err
+      }
+      return rejectWithValue(error.response.data)
+    }
+});
+
 export const loginStateSlice = createSlice({
   name: 'login',
   initialState,
@@ -65,6 +83,21 @@ export const loginStateSlice = createSlice({
         console.log(action)
       })
       .addCase(loginAsync.rejected, (state, action) => {
+        if (action.payload) {
+          state.error = action.payload.message;
+        } else {
+          state.error = action.error.message;
+        }
+      })
+      .addCase(registerAsync.pending, (state) => {
+      })
+      .addCase(registerAsync.fulfilled, (state, action) => {
+        state.access_token = action.payload.access_token;
+        state.login = true;
+        state.error = null;
+        console.log(action)
+      })
+      .addCase(registerAsync.rejected, (state, action) => {
         if (action.payload) {
           state.error = action.payload.message;
         } else {

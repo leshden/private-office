@@ -6,7 +6,7 @@ const Home = () => {
 
   const { login } = useSelector((state: RootState) => state.login)
 
-  const logiOrNot = () => {
+  const loginOrNot = () => {
     if (login) {
       return (
         <p>Вы залогинены.</p>
@@ -14,14 +14,14 @@ const Home = () => {
     } else {
       return (
         <div>
-          <p>Вы не залогинены</p>
-          <Link to='/login'>Login</Link>
+          <p>Для входа в <strong>Личный кабинет</strong> необходима <Link to='/login'>Авторизация</Link></p>
+          <p>Если у вас еще нет аккаунта, то нужна <Link to='/register'>Регистрация</Link> </p>
         </div>
       );
     }
   }
 
-  return logiOrNot();
+  return loginOrNot();
 }
 
 export default Home;

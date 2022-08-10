@@ -4,7 +4,7 @@ const jsonServer = require('json-server');
 const jwt = require('jsonwebtoken');
 
 const server = jsonServer.create();
-const userdb = JSON.parse(fs.readFileSync('./server/users.json', 'utf-8'));
+let userdb = JSON.parse(fs.readFileSync('./server/users.json', 'utf-8'));
 
 server.use(bodyParser.urlencoded({extended: true}));
 server.use(bodyParser.json());
@@ -32,7 +32,7 @@ server.post('/api/auth/register', (req, res) => {
     return;
   }
 
-  fs.readFile('./users.json', (err, data) => {
+  fs.readFile('./server/users.json', (err, data) => {
     if (err) {
       const status = 401;
       const message = err;
@@ -43,7 +43,7 @@ server.post('/api/auth/register', (req, res) => {
     let last_item_id = data.users[data.users.length - 1].id;
     data.users.push({id: last_item_id + 1, email: email, password: password});
     let writeData = fs.writeFile(
-      "./users.json",
+      "./server/users.json",
       JSON.stringify(data),
       (err, result) => {
         if (err) {
@@ -52,9 +52,11 @@ server.post('/api/auth/register', (req, res) => {
           res.status(status).json({status,message});
           return;
         }
+        userdb = JSON.parse(fs.readFileSync('./server/users.json', 'utf-8'));
       }
     )
   });
+
   const access_token = createToken({email, password});
   res.status(200).json({access_token});
 });
