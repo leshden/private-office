@@ -1,6 +1,12 @@
+import Contact from '../contact/Contact';
+import './Contacts.css';
+
 const Contacts = () => {
+  const arr = Array(3).fill(10);
   return (
-    <div>Contacts page</div>
+    <ul className='contacts-container'>
+      {arr.map((item, index) => <Contact key={index} />)}
+    </ul>
   )
 }
 
