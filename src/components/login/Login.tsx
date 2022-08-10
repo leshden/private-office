@@ -1,16 +1,16 @@
 import {useState} from 'react';
+import { useSelector } from 'react-redux'
 import Error from '../error/Error'
-import axios from "axios";
 import {loginAsync} from '../../features/login-state/loginStateSlice';
-import {useAppDispatch} from '../../app/store';
+import {useAppDispatch, RootState} from '../../app/store';
 
 const Login = () => {
 
   const dispatch = useAppDispatch();
+  const { error } = useSelector((state: RootState) => state.login)
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
 
   const onChangeEmail = (event: React.FormEvent<HTMLInputElement>):void => {
     setEmail(event.currentTarget.value);

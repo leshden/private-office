@@ -4,7 +4,7 @@ import axios, {AxiosError} from "axios";
 interface LoginState {
   login: boolean;
   access_token: string;
-  error: string;
+  error: string | null | undefined;
 }
 
 interface AccessToken {
@@ -12,8 +12,7 @@ interface AccessToken {
 }
 
 interface ValidationErrors {
-  errorMessage: string
-  field_errors: Record<string, string>
+  message: string
 }
 
 interface User {
@@ -27,19 +26,23 @@ const initialState = {
   error: '',
 } as LoginState
 
-export const loginAsync = createAsyncThunk<AccessToken, User>(
+export const loginAsync = createAsyncThunk<AccessToken, User, { rejectValue: ValidationErrors }>(
   'login-state/loginAsync',
-  async ({email, password}: User) => {
-
+  async (userData, { rejectWithValue }) => {
+    try {
+      const { email, password } = userData
       const response = await axios.post('http://localhost:5000/api/auth/login', {
         email, password
       });
-
-      console.log(response.data);
-
       return response.data;
-  }
-);
+    } catch (err) {
+      let error: AxiosError<ValidationErrors> = err as AxiosError<ValidationErrors>
+      if (!error.response) {
+        throw err
+      }
+      return rejectWithValue(error.response.data)
+    }
+});
 
 export const loginStateSlice = createSlice({
   name: 'login',
@@ -54,11 +57,15 @@ export const loginStateSlice = createSlice({
       .addCase(loginAsync.fulfilled, (state, action) => {
         state.access_token = action.payload.access_token;
         state.login = true;
+        state.error = null;
         console.log(action)
       })
       .addCase(loginAsync.rejected, (state, action) => {
-        console.log('ERROR!!!')
-        console.log(action);
+        if (action.payload) {
+          state.error = action.payload.message;
+        } else {
+          state.error = action.error.message;
+        }
       });
   },
 
