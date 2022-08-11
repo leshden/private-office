@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken');
 
 const server = jsonServer.create();
 let userdb = JSON.parse(fs.readFileSync('./server/users.json', 'utf-8'));
+// let contactsdb = JSON.parse(fs.readFileSync('./server/contacts.json', 'utf-8'));
 
 server.use(bodyParser.urlencoded({extended: true}));
 server.use(bodyParser.json());
@@ -57,8 +58,9 @@ server.post('/api/auth/register', (req, res) => {
     )
   });
 
+  const contacts = [];
   const access_token = createToken({email, password});
-  res.status(200).json({access_token});
+  res.status(200).json({access_token, contacts});
 });
 
 server.post("/api/auth/login", (req, res) => {
@@ -70,7 +72,9 @@ server.post("/api/auth/login", (req, res) => {
     return;
   }
   const access_token = createToken({email, password});
-  res.status(200).json({access_token});
+  const contacts = JSON.parse(fs.readFileSync('./server/contacts.json', 'utf-8'))[email];
+
+  res.status(200).json({access_token, contacts});
 });
 
 server.listen(5000, () => {

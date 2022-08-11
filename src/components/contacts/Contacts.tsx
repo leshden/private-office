@@ -1,12 +1,23 @@
+import { useSelector } from 'react-redux';
+import { RootState } from '../../app/store';
 import Contact from '../contact/Contact';
 import './Contacts.css';
 
 const Contacts = () => {
-  const arr = Array(3).fill(10);
+  const { contacts } = useSelector((state: RootState) => state.login)
+
   return (
-    <ul className='contacts-container'>
-      {arr.map((item, index) => <Contact key={index} />)}
-    </ul>
+    <>
+      <h3 className='contacts-title'>Контакты</h3>
+      <div className='contacts-header'>
+          <p>Имя</p>
+          <p>Фамилия</p>
+          <p>Телефон</p>
+      </div>
+      <ul className='contacts-container'>
+        {contacts.map((item, index) => <Contact key={index} user={item} />)}
+      </ul>
+    </>
   )
 }
 

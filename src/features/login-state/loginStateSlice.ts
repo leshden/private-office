@@ -1,14 +1,17 @@
 import {createSlice, createAsyncThunk} from '@reduxjs/toolkit';
 import axios, {AxiosError} from "axios";
+import {ContactUser} from '../../interfaces/Contact';
 
 interface LoginState {
   login: boolean;
   access_token: string;
   error: string | null | undefined;
+  contacts: ContactUser[];
 }
 
-interface AccessToken {
+interface ResponseData {
   access_token: string;
+  contacts: ContactUser[];
 }
 
 interface ValidationErrors {
@@ -24,9 +27,10 @@ const initialState = {
   login: false,
   access_token: '',
   error: '',
+  contacts: [],
 } as LoginState
 
-export const loginAsync = createAsyncThunk<AccessToken, User, { rejectValue: ValidationErrors }>(
+export const loginAsync = createAsyncThunk<ResponseData, User, { rejectValue: ValidationErrors }>(
   'login-state/loginAsync',
   async (userData, { rejectWithValue }) => {
     try {
@@ -44,7 +48,7 @@ export const loginAsync = createAsyncThunk<AccessToken, User, { rejectValue: Val
     }
 });
 
-export const registerAsync = createAsyncThunk<AccessToken, User, { rejectValue: ValidationErrors }>(
+export const registerAsync = createAsyncThunk<ResponseData, User, { rejectValue: ValidationErrors }>(
   'login-state/registerAsync',
   async (userData, { rejectWithValue }) => {
     try {
@@ -70,6 +74,7 @@ export const loginStateSlice = createSlice({
       state.access_token = "";
       state.login = false;
       state.error = null;
+      state.contacts = [];
     },
   },
   extraReducers: (builder) => {
@@ -78,9 +83,9 @@ export const loginStateSlice = createSlice({
       })
       .addCase(loginAsync.fulfilled, (state, action) => {
         state.access_token = action.payload.access_token;
+        state.contacts = action.payload.contacts;
         state.login = true;
         state.error = null;
-        console.log(action)
       })
       .addCase(loginAsync.rejected, (state, action) => {
         if (action.payload) {
@@ -93,6 +98,7 @@ export const loginStateSlice = createSlice({
       })
       .addCase(registerAsync.fulfilled, (state, action) => {
         state.access_token = action.payload.access_token;
+        state.contacts = action.payload.contacts;
         state.login = true;
         state.error = null;
         console.log(action)
