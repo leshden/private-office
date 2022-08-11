@@ -77,6 +77,23 @@ server.post("/api/auth/login", (req, res) => {
   res.status(200).json({access_token, contacts});
 });
 
+server.post("/api/contacts/edit", (req, res) => {
+  const {email, name, surname, phone} = req.body;
+  if (!email) {
+    const status = 401;
+    const message = 'Email is Empty';
+    res.status(status).json({status, message})
+    return;
+  }
+
+  //парсим контакт, нужен id
+
+  //получаем обновленный
+  const contacts = JSON.parse(fs.readFileSync('./server/contacts.json', 'utf-8'))[email];
+
+  res.status(200).json({contacts});
+});
+
 server.listen(5000, () => {
   console.log('Running fake api json server');
 })

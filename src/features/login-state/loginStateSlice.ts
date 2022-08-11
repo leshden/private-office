@@ -111,7 +111,6 @@ export const loginStateSlice = createSlice({
         }
       });
   },
-
 });
 
 export const { logout } = loginStateSlice.actions;
