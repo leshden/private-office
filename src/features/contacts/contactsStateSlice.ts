@@ -56,13 +56,31 @@ export const editAsync = createAsyncThunk<ResponseData, ContactUser & {email: st
     }
 });
 
+export const deleteAsync = createAsyncThunk<ResponseData, Partial<ContactUser> & {email: string}, { rejectValue: ValidationErrors }>(
+  'contacts/deleteAsync',
+  async (userData, { rejectWithValue }) => {
+    try {
+      const { id, email } = userData
+      const response = await axios.post('http://localhost:5000/api/contacts/delete', {
+        id, email
+      });
+      return response.data;
+    } catch (err) {
+      let error: AxiosError<ValidationErrors> = err as AxiosError<ValidationErrors>
+      if (!error.response) {
+        throw err
+      }
+      return rejectWithValue(error.response.data)
+    }
+});
+
 export const contactsStateSlice = createSlice({
   name: 'contacts',
   initialState,
   reducers: {
   },
   extraReducers: (builder) => {
-    builder
+    builder // get contacts
       .addCase(getAsync.pending, (state) => {
       })
       .addCase(getAsync.fulfilled, (state, action) => {
@@ -75,14 +93,30 @@ export const contactsStateSlice = createSlice({
         } else {
           state.error = action.error.message;
         }
-      })
+      }) // edit contacts
       .addCase(editAsync.pending, (state) => {
       })
       .addCase(editAsync.fulfilled, (state, action) => {
+        console.log(action.payload.contacts);
         state.contacts = action.payload.contacts;
         state.error = null;
       })
       .addCase(editAsync.rejected, (state, action) => {
+        if (action.payload) {
+          state.error = action.payload.message;
+        } else {
+          state.error = action.error.message;
+        }
+      }) // delete contacts
+      .addCase(deleteAsync.pending, (state) => {
+      })
+      .addCase(deleteAsync.fulfilled, (state, action) => {
+        console.log(action.payload.contacts);
+        state.contacts = action.payload.contacts;
+        state.error = null;
+        console.log(`CONTACTS GOT : ${action.payload.contacts}`)
+      })
+      .addCase(deleteAsync.rejected, (state, action) => {
         if (action.payload) {
           state.error = action.payload.message;
         } else {

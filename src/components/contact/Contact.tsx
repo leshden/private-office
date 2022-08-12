@@ -1,5 +1,8 @@
 import {useState} from 'react';
+import { useSelector } from 'react-redux'
 import {ContactUser} from '../../interfaces/Contact';
+import { useAppDispatch, RootState } from '../../app/store';
+import { editAsync, deleteAsync } from '../../features/contacts/contactsStateSlice';
 import './Contact.css';
 
 type Props = {
@@ -14,6 +17,9 @@ const Contact = ({user}: Props) => {
   const [nameValue, setNameValue] = useState(name);
   const [surnameValue, setSurnameValue] = useState(surname);
   const [phoneValue, setPhoneValue] = useState(phone);
+
+  const { email } = useSelector((state: RootState) => state.login)
+  const dispatch = useAppDispatch();
 
   const resetValues = () => {
     setNameValue(name);
@@ -42,11 +48,12 @@ const Contact = ({user}: Props) => {
       return;
     }
 
-    //стучимся на сервер? id
+    dispatch(editAsync({ email, id, name: nameValue, surname: surnameValue, phone: phoneValue}));
+    setEdit(false);
   }
 
   const deleteOnClick = () => {
-    // отправить на сервак nameValue, surnameValue, phoneValue
+    dispatch(deleteAsync({ email, id}));
   }
 
   const showAcceptBtn = () => {

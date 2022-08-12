@@ -5,6 +5,7 @@ import './Contacts.css';
 
 const Contacts = () => {
   const { contacts } = useSelector((state: RootState) => state.contacts)
+  console.log(`contacts: ${contacts}`);
 
   return (
     <>

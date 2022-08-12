@@ -84,8 +84,8 @@ server.post("/api/contacts/get", (req, res) => {
     return;
   }
 
-  const contacts = JSON.parse(fs.readFileSync('./server/contacts.json', 'utf-8'))[email];
-  res.status(200).json({contacts});
+  let contacts = JSON.parse(fs.readFileSync('./server/contacts.json', 'utf-8'))[email];
+  res.status(200).json(contacts === undefined ? {contacts: []} : {contacts});
 });
 
 server.post("/api/contacts/edit", (req, res) => {
@@ -97,13 +97,64 @@ server.post("/api/contacts/edit", (req, res) => {
     return;
   }
 
-  //парсим контакт, нужен id
+  let contacts = JSON.parse(fs.readFileSync('./server/contacts.json', 'utf-8'));
+  for (let i = 0; i < contacts[email].length; ++i) {
+    if (id === contacts[email][i].id) {
+      contacts[email][i].name = name;
+      contacts[email][i].surname = surname;
+      contacts[email][i].phone = phone;
+      break;
+    }
+  }
 
-  //получаем обновленный
-  const contacts = JSON.parse(fs.readFileSync('./server/contacts.json', 'utf-8'));
-  //contacts[email]
+  fs.writeFile(
+    "./server/contacts.json",
+    JSON.stringify(contacts),
+    (err, result) => {
+      if (err) {
+        const status = 401;
+        const message = err;
+        res.status(status).json({status,message});
+        return;
+      }
+    }
+  )
 
+  contacts = JSON.parse(fs.readFileSync('./server/contacts.json', 'utf-8'))[email];
   res.status(200).json({contacts});
+});
+
+server.post("/api/contacts/delete", (req, res) => {
+  const {email, id} = req.body;
+  if (!email) {
+    const status = 401;
+    const message = 'Email is Empty';
+    res.status(status).json({status, message})
+    return;
+  }
+
+  let contacts = JSON.parse(fs.readFileSync('./server/contacts.json', 'utf-8'));
+  let user =  contacts[email].filter(item => item.id !== id);
+  for (let i = 0; i < user.length; ++i) {
+    user.id = i + 1;
+  }
+
+  contacts[email] = user;
+
+  fs.writeFile(
+    "./server/contacts.json",
+    JSON.stringify(contacts),
+    (err, result) => {
+      if (err) {
+        const status = 401;
+        const message = err;
+        res.status(status).json({status,message});
+        return;
+      }
+    }
+  )
+
+  res.status(200).json({contacts: contacts[email]});
 });
 
 server.listen(5000, () => {
