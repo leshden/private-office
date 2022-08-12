@@ -167,7 +167,8 @@ server.post("/api/contacts/add", (req, res) => {
   }
 
   let contacts = JSON.parse(fs.readFileSync('./server/contacts.json', 'utf-8'));
-  let user =  contacts[email]
+  let user =  contacts[email] === undefined ? [] : contacts[email]
+
   const nextId = user.length + 1;
   user.push({id: nextId, name: name, surname:surname, phone:phone});
 

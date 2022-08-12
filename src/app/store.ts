@@ -1,12 +1,14 @@
 import { configureStore } from '@reduxjs/toolkit';
 import loginReducer from '../features/login-state/loginStateSlice';
 import contactsReducer from '../features/contacts/contactsStateSlice';
+import filterReducer from '../features/filter/filterStateSlice';
 import {useDispatch} from 'react-redux';
 
 export const store = configureStore({
   reducer: {
     login: loginReducer,
-    contacts: contactsReducer
+    contacts: contactsReducer,
+    filter: filterReducer
   },
 });
 
