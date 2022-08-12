@@ -1,5 +1,7 @@
+import { useEffect } from 'react';
 import { useSelector } from 'react-redux'
-import { RootState } from '../../app/store';
+import { useAppDispatch, RootState } from '../../app/store';
+import { getAsync } from '../../features/contacts/contactsStateSlice';
 import { Link } from "react-router-dom";
 import Contacts from '../contacts/Contacts';
 import Filter from '../filter/Filter';
@@ -8,7 +10,14 @@ import './Home.css';
 
 const Home = () => {
 
-  const { login } = useSelector((state: RootState) => state.login)
+  const { login, email } = useSelector((state: RootState) => state.login)
+  const dispatch = useAppDispatch();
+
+  useEffect(()=>{
+    if (login) {
+      dispatch(getAsync({email}))
+    }
+  }, [login, email])
 
   const loginOrNot = () => {
     if (login) {

@@ -4,7 +4,7 @@ import Contact from '../contact/Contact';
 import './Contacts.css';
 
 const Contacts = () => {
-  const { contacts } = useSelector((state: RootState) => state.login)
+  const { contacts } = useSelector((state: RootState) => state.contacts)
 
   return (
     <>
@@ -15,7 +15,7 @@ const Contacts = () => {
           <p>Телефон</p>
       </div>
       <ul className='contacts-container'>
-        {contacts.map((item, index) => <Contact key={index} user={item} />)}
+        {contacts.map((item, index) => <Contact key={item.id} user={item} />)}
       </ul>
     </>
   )

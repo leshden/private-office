@@ -7,7 +7,7 @@ type Props = {
 }
 
 const Contact = ({user}: Props) => {
-  const {name, surname, phone} = user;
+  const {id, name, surname, phone} = user;
 
   const [edit, setEdit] = useState(false);
 
@@ -42,7 +42,7 @@ const Contact = ({user}: Props) => {
       return;
     }
 
-    //стучимся на сервер?
+    //стучимся на сервер? id
   }
 
   const deleteOnClick = () => {

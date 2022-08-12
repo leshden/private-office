@@ -58,9 +58,8 @@ server.post('/api/auth/register', (req, res) => {
     )
   });
 
-  const contacts = [];
   const access_token = createToken({email, password});
-  res.status(200).json({access_token, contacts});
+  res.status(200).json({access_token, email});
 });
 
 server.post("/api/auth/login", (req, res) => {
@@ -72,13 +71,25 @@ server.post("/api/auth/login", (req, res) => {
     return;
   }
   const access_token = createToken({email, password});
-  const contacts = JSON.parse(fs.readFileSync('./server/contacts.json', 'utf-8'))[email];
 
-  res.status(200).json({access_token, contacts});
+  res.status(200).json({access_token, email});
+});
+
+server.post("/api/contacts/get", (req, res) => {
+  const {email} = req.body;
+  if (!email) {
+    const status = 401;
+    const message = 'Email is Empty';
+    res.status(status).json({status, message})
+    return;
+  }
+
+  const contacts = JSON.parse(fs.readFileSync('./server/contacts.json', 'utf-8'))[email];
+  res.status(200).json({contacts});
 });
 
 server.post("/api/contacts/edit", (req, res) => {
-  const {email, name, surname, phone} = req.body;
+  const {email, id, name, surname, phone} = req.body;
   if (!email) {
     const status = 401;
     const message = 'Email is Empty';
@@ -89,7 +100,8 @@ server.post("/api/contacts/edit", (req, res) => {
   //парсим контакт, нужен id
 
   //получаем обновленный
-  const contacts = JSON.parse(fs.readFileSync('./server/contacts.json', 'utf-8'))[email];
+  const contacts = JSON.parse(fs.readFileSync('./server/contacts.json', 'utf-8'));
+  //contacts[email]
 
   res.status(200).json({contacts});
 });

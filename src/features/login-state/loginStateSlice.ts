@@ -1,17 +1,16 @@
 import {createSlice, createAsyncThunk} from '@reduxjs/toolkit';
 import axios, {AxiosError} from "axios";
-import {ContactUser} from '../../interfaces/Contact';
 
 interface LoginState {
   login: boolean;
   access_token: string;
+  email: string;
   error: string | null | undefined;
-  contacts: ContactUser[];
 }
 
 interface ResponseData {
   access_token: string;
-  contacts: ContactUser[];
+  email: string;
 }
 
 interface ValidationErrors {
@@ -26,8 +25,8 @@ interface User {
 const initialState = {
   login: false,
   access_token: '',
+  email: '',
   error: '',
-  contacts: [],
 } as LoginState
 
 export const loginAsync = createAsyncThunk<ResponseData, User, { rejectValue: ValidationErrors }>(
@@ -74,7 +73,6 @@ export const loginStateSlice = createSlice({
       state.access_token = "";
       state.login = false;
       state.error = null;
-      state.contacts = [];
     },
   },
   extraReducers: (builder) => {
@@ -83,7 +81,7 @@ export const loginStateSlice = createSlice({
       })
       .addCase(loginAsync.fulfilled, (state, action) => {
         state.access_token = action.payload.access_token;
-        state.contacts = action.payload.contacts;
+        state.email = action.payload.email;
         state.login = true;
         state.error = null;
       })
@@ -98,7 +96,7 @@ export const loginStateSlice = createSlice({
       })
       .addCase(registerAsync.fulfilled, (state, action) => {
         state.access_token = action.payload.access_token;
-        state.contacts = action.payload.contacts;
+        state.email = action.payload.email;
         state.login = true;
         state.error = null;
         console.log(action)
