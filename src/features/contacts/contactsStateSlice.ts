@@ -74,6 +74,24 @@ export const deleteAsync = createAsyncThunk<ResponseData, Partial<ContactUser> &
     }
 });
 
+export const addAsync = createAsyncThunk<ResponseData, Partial<ContactUser> & {email: string}, { rejectValue: ValidationErrors }>(
+  'contacts/addAsync',
+  async (userData, { rejectWithValue }) => {
+    try {
+      const { name, surname, phone, email } = userData
+      const response = await axios.post('http://localhost:5000/api/contacts/add', {
+        name, surname, phone, email
+      });
+      return response.data;
+    } catch (err) {
+      let error: AxiosError<ValidationErrors> = err as AxiosError<ValidationErrors>
+      if (!error.response) {
+        throw err
+      }
+      return rejectWithValue(error.response.data)
+    }
+});
+
 export const contactsStateSlice = createSlice({
   name: 'contacts',
   initialState,
@@ -111,12 +129,23 @@ export const contactsStateSlice = createSlice({
       .addCase(deleteAsync.pending, (state) => {
       })
       .addCase(deleteAsync.fulfilled, (state, action) => {
-        console.log(action.payload.contacts);
         state.contacts = action.payload.contacts;
         state.error = null;
-        console.log(`CONTACTS GOT : ${action.payload.contacts}`)
       })
       .addCase(deleteAsync.rejected, (state, action) => {
+        if (action.payload) {
+          state.error = action.payload.message;
+        } else {
+          state.error = action.error.message;
+        }
+      }) // add contact
+      .addCase(addAsync.pending, (state) => {
+      })
+      .addCase(addAsync.fulfilled, (state, action) => {
+        state.contacts = action.payload.contacts;
+        state.error = null;
+      })
+      .addCase(addAsync.rejected, (state, action) => {
         if (action.payload) {
           state.error = action.payload.message;
         } else {

@@ -136,7 +136,43 @@ server.post("/api/contacts/delete", (req, res) => {
   let contacts = JSON.parse(fs.readFileSync('./server/contacts.json', 'utf-8'));
   let user =  contacts[email].filter(item => item.id !== id);
   for (let i = 0; i < user.length; ++i) {
-    user.id = i + 1;
+    user[i].id = i + 1;
+  }
+
+  contacts[email] = user;
+
+  fs.writeFile(
+    "./server/contacts.json",
+    JSON.stringify(contacts),
+    (err, result) => {
+      if (err) {
+        const status = 401;
+        const message = err;
+        res.status(status).json({status,message});
+        return;
+      }
+    }
+  )
+
+  res.status(200).json({contacts: contacts[email]});
+});
+
+server.post("/api/contacts/add", (req, res) => {
+  const {email, name, surname, phone} = req.body;
+  if (!email) {
+    const status = 401;
+    const message = 'Email is Empty';
+    res.status(status).json({status, message})
+    return;
+  }
+
+  let contacts = JSON.parse(fs.readFileSync('./server/contacts.json', 'utf-8'));
+  let user =  contacts[email]
+  const nextId = user.length + 1;
+  user.push({id: nextId, name: name, surname:surname, phone:phone});
+
+  for (let i = 0; i < user.length; ++i) {
+    user[i].id = i + 1;
   }
 
   contacts[email] = user;
