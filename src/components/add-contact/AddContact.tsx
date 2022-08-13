@@ -34,15 +34,20 @@ const AddContact = () => {
   }
 
   return (
-    <form className='add-contact-container' onSubmit ={onSubmitForm}>
-      <label htmlFor="add-name">Имя:</label>
-      <input className='add-contact-input' id='add-name' type='text' value={name} required onChange={onChangeName} />
-      <label htmlFor="add-surname">Фамилия:</label>
-      <input className='add-contact-input' id='add-surname' type='text' value={surname} required onChange={onChangeSurname} />
-      <label htmlFor="add-phone">Телефон:</label>
-      <input className='add-contact-input' id='add-phone' type='text' value={phone} required onChange={onChangePhone} />
-      <button className='add-contact-button'>Добавить</button>
-    </form>
+    <section className='add-contact-container'>
+      <h1 className='add-contact-title'>Добавить контакт</h1>
+      <form className='add-contact-form-container' onSubmit ={onSubmitForm}>
+        <div className='add-contact-input-container'>
+          <label className='add-contact-label' htmlFor="add-name">Имя:</label>
+          <input className='add-contact-input' id='add-name' type='text' value={name} required onChange={onChangeName} />
+          <label className='add-contact-label' htmlFor="add-surname">Фамилия:</label>
+          <input className='add-contact-input' id='add-surname' type='text' value={surname} required onChange={onChangeSurname} />
+          <label className='add-contact-label' htmlFor="add-phone">Телефон:</label>
+          <input className='add-contact-input' id='add-phone' type='text' value={phone} required onChange={onChangePhone} />
+        </div>
+        <button className='add-contact-button'>Добавить</button>
+      </form>
+    </section>
   )
 }
 

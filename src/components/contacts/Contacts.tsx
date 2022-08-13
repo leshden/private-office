@@ -20,17 +20,17 @@ const Contacts = () => {
   console.log(`contacts: ${contacts}`);
 
   return (
-    <>
+    <section className='contacts-container'>
       <h3 className='contacts-title'>Контакты</h3>
       <div className='contacts-header'>
-          <p>Имя</p>
-          <p>Фамилия</p>
-          <p>Телефон</p>
+          <p className='contacts-name-title'>Имя</p>
+          <p className='contacts-name-title'>Фамилия</p>
+          <p className='contacts-name-title'>Телефон</p>
       </div>
-      <ul className='contacts-container'>
+      <ul className='contacts-ul-container'>
         {filterContacts.map((item, index) => <Contact key={item.id} user={item} />)}
       </ul>
-    </>
+    </section>
   )
 }
 

@@ -20,12 +20,15 @@ const Filter = () => {
 
   return (
     <section className='filter-container'>
-      <input className='filter-input' type='text' value={filterValue} onChange={changeFilterValue} />
-      <select name="filter-select" onChange={changeTypeFilter} defaultValue={TYPE_NAME}>
-        <option value={TYPE_NAME}>Имя</option>
-        <option value={TYPE_SURNAME}>Фамилия</option>
-        <option value={TYPE_PHONE}>Телефон</option>
-      </select>
+      <h1 className='filter-title'>Поисковый фильтр</h1>
+      <div className='filter-input-container'>
+        <input className='filter-input' type='text' value={filterValue} onChange={changeFilterValue} />
+        <select name="filter-select" onChange={changeTypeFilter} defaultValue={TYPE_NAME}>
+          <option value={TYPE_NAME}>Имя</option>
+          <option value={TYPE_SURNAME}>Фамилия</option>
+          <option value={TYPE_PHONE}>Телефон</option>
+        </select>
+      </div>
     </section>
   )
 }

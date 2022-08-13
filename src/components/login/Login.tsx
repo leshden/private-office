@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux'
 import Error from '../error/Error'
 import {loginAsync} from '../../features/login-state/loginStateSlice';
 import {useAppDispatch, RootState} from '../../app/store';
+import './Login.css';
 
 const Login = () => {
 
@@ -32,17 +33,22 @@ const Login = () => {
   }
 
   return (
-    <div>
-    {showError()}
+    <section className='login-container'>
+      <h1 className='login-title'>Авторизация</h1>
+      {showError()}
 
-    <form onSubmit ={onSubmitForm}>
-      <label htmlFor='email'>Email: </label>
-      <input type='email' id='email' required onChange={onChangeEmail} />
-      <label htmlFor='password'>Password: </label>
-      <input type='password' autoComplete='off' id='password' required onChange={onChangePassword} />
-      <input type="submit" value='Login'/>
-    </form>
-    </div>
+      <form className='login-form' onSubmit ={onSubmitForm}>
+        <div className='login-form-input'>
+          <label htmlFor='email'>Email: </label>
+          <input type='email' id='email' required onChange={onChangeEmail} />
+        </div>
+        <div className='login-form-input'>
+          <label htmlFor='password'>Пароль: </label>
+          <input type='password' autoComplete='off' id='password' required onChange={onChangePassword} />
+        </div>
+        <input className='login-btn' type="submit" value='Login'/>
+      </form>
+    </section>
   )
 }
 

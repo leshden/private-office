@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux'
 import Error from '../error/Error'
 import {registerAsync} from '../../features/login-state/loginStateSlice';
 import {useAppDispatch, RootState} from '../../app/store';
+import './Register.css';
 
 const Register = () => {
   const dispatch = useAppDispatch();
@@ -31,17 +32,22 @@ const Register = () => {
   }
 
   return (
-    <div>
-    {showError()}
+    <section className='register-container'>
+      <h1 className='register-title'>Регистрация</h1>
+      {showError()}
 
-    <form onSubmit ={onSubmitForm}>
-      <label htmlFor='email'>Email: </label>
-      <input type='email' id='email' required onChange={onChangeEmail} />
-      <label htmlFor='password'>Password: </label>
-      <input type='password' autoComplete='off' id='password' required onChange={onChangePassword} />
-      <input type="submit" value='Login'/>
-    </form>
-    </div>
+      <form className='register-form' onSubmit ={onSubmitForm}>
+        <div className='register-form-input'>
+          <label htmlFor='email'>Email: </label>
+          <input type='email' id='email' required onChange={onChangeEmail} />
+        </div>
+        <div className='register-form-input'>
+          <label htmlFor='password'>Password: </label>
+          <input type='password' autoComplete='off' id='password' required onChange={onChangePassword} />
+        </div>
+        <input className='register-btn' type="submit" value='Login'/>
+      </form>
+    </section>
   )
 }
 
